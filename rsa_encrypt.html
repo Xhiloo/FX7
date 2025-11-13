@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="system">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KriptoKu • RSA Encrypt</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script defer src="js/utils.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="logo">₭</span>
+        <a href="rsa.html" class="brand-name">KriptoKu</a>
+      </div>
+      <div class="header-actions">
+        <a class="tab" href="index.html">Menu</a>
+        <a class="tab" href="rsa_keys.html">Generate Key</a>
+        <a class="tab active" href="rsa.html">RSA</a>
+        <a class="tab" href="caesar.html">Caesar</a>
+      </div>
+      <div class="theme-toggle">
+        <button id="theme-light" class="chip">☀️</button>
+        <button id="theme-system" class="chip">⚙️</button>
+        <button id="theme-dark" class="chip">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container page-grid">
+      <!-- Edukasi -->
+      <section class="card reveal algo-panel">
+        <div class="card-head">
+          <div>
+            <h1>RSA • Enkripsi</h1>
+            <p class="lead">
+              Sebagai <strong>pengirim</strong>, kamu menggunakan <strong>public key
+              penerima</strong> untuk mengubah plainteks menjadi ciphertext berupa bilangan bulat.
+            </p>
+          </div>
+          <div class="algo-tags">
+            <span class="chip-soft">Peran: Pengirim</span>
+            <span class="chip-soft">Kunci: Public (n, e)</span>
+          </div>
+        </div>
+        <div class="card-body algo-body">
+          <div class="algo-section">
+            <h3>Alur singkat</h3>
+            <ul class="edu-list">
+              <li>1. Dapatkan file public key (.json) dari penerima.</li>
+              <li>2. Impor public key pada halaman ini.</li>
+              <li>3. Ketik plainteks yang ingin dienkripsi.</li>
+              <li>4. Sistem akan menghitung ciphertext untuk tiap karakter.</li>
+            </ul>
+          </div>
+          <div class="algo-section">
+            <h3>Keamanan konsep</h3>
+            <ul class="edu-list">
+              <li>Hanya pemilik <strong>private key</strong> yang bisa mendekripsi ciphertext.</li>
+              <li>Public key boleh disebarkan ke siapa saja yang ingin mengirim pesan aman.</li>
+              <li>Keamanan RSA bergantung pada sulitnya memfaktorkan n menjadi p dan q.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workspace -->
+      <section class="card reveal workspace">
+        <div class="card-head workspace-head">
+          <div>
+            <h2>Enkripsi dengan Public Key</h2>
+            <p class="muted">
+              Impor public key penerima, tulis pesan, dan dapatkan ciphertext berupa deretan angka.
+            </p>
+          </div>
+          <div class="workspace-meta">
+            <div class="meta-item">
+              <span class="meta-label">Mode</span>
+              <span class="meta-value">Encrypt</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Kunci</span>
+              <span class="meta-value">Public key</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body workspace-body">
+          <div class="field-group">
+            <label for="pubFile">Impor Public Key (.json)</label>
+            <input id="pubFile" class="input" type="file" accept=".json" />
+            <div id="pubInfo" class="small muted">Belum ada kunci terimpor.</div>
+          </div>
+
+          <div class="field-group">
+            <label for="plain">Plainteks (A–Z akan dipetakan ke angka)</label>
+            <textarea id="plain" class="input" rows="4"
+              placeholder="HALO KAKAAA"></textarea>
+            <p class="field-hint">
+              Untuk demo, huruf biasanya dikonversi ke angka (misal A=0, B=1, dst) sebelum diproses dengan rumus RSA.
+            </p>
+          </div>
+
+          <div class="actions">
+            <button id="encrypt" class="btn primary">Enkripsi</button>
+          </div>
+
+          <div class="field-group">
+            <label for="cipher">Ciphertext (angka dipisah spasi)</label>
+            <textarea id="cipher" class="input" rows="3" readonly
+              placeholder="Hasil enkripsi muncul di sini, contoh: 7 4 11 11 14"></textarea>
+            <div class="field-footer">
+              <button id="copyCipher" class="btn ghost small">Salin ciphertext</button>
+              <span class="muted small">
+                Kirim ciphertext ke penerima. Tanpa private key, seharusnya sulit untuk mengembalikan ke plainteks.
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="container card reveal steps-card">
+      <div class="card-head">
+        <div>
+          <h3>Langkah Enkripsi</h3>
+          <p class="muted">
+            Detail per karakter: pemetaan ke angka, perhitungan dengan rumus RSA, lalu kembali ke representasi ciphertext.
+          </p>
+        </div>
+        <div class="progressbar"><span id="prog"></span></div>
+      </div>
+        <div class="card-body steps-wrap">
+    <ol class="proc-steps">
+      <li>
+        <strong>Impor public key.</strong>
+        Pengguna memilih file public key (.json) yang berisi nilai <code>n</code> dan <code>e</code> milik penerima.
+      </li>
+      <li>
+        <strong>Konversi plainteks.</strong>
+        Pesan teks dipecah menjadi karakter, lalu setiap karakter dipetakan ke representasi numerik sesuai skema yang digunakan.
+      </li>
+      <li>
+        <strong>Proses enkripsi per blok.</strong>
+        Untuk setiap nilai numerik <code>m</code>, sistem menerapkan rumus
+        <code>c = m^e mod n</code> untuk menghasilkan ciphertext <code>c</code>.
+      </li>
+      <li>
+        <strong>Penyusunan ciphertext.</strong>
+        Seluruh nilai <code>c</code> disusun menjadi deretan angka yang dipisahkan spasi agar mudah dikirim dan dianalisis.
+      </li>
+      <li>
+        <strong>Validasi & visualisasi.</strong>
+        Tabel di bawah menampilkan detail proses, termasuk nilai <code>m</code>, parameter kunci, dan hasil akhir <code>c</code>.
+      </li>
+    </ol>
+    <p class="proc-note">
+      Catatan: pada implementasi nyata, ukuran kunci dan pengelolaan blok data dibuat lebih kompleks
+      untuk memenuhi kebutuhan keamanan tingkat produksi.
+    </p>
+    <div id="steps" class="steps"></div>
+  </div>
+
+
+  <footer class="site-footer">© <span id="year"></span> KriptoKu</footer>
+  <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+  <script defer src="js/theme.js"></script>
+  <script defer src="js/helpers.js"></script>
+  <script defer src="js/rsa_encrypt.js"></script>
+</body>
+</html>

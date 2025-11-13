@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="system">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KriptoKu • Caesar Algorithm</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/utils.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="logo">₭</span>
+        <a href="index.html" class="brand-name">KriptoKu</a>
+      </div>
+      <div class="header-actions">
+        <a class="tab" href="index.html">Menu</a>
+        <a class="tab" href="rsa_keys.html">Generate Key</a>
+        <a class="tab" href="rsa.html">RSA</a>
+        <a class="tab active" href="caesar.html">Caesar</a>
+      </div>
+      <div class="theme-toggle">
+        <button id="theme-light" class="chip">☀️</button>
+        <button id="theme-system" class="chip">⚙️</button>
+        <button id="theme-dark" class="chip">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container page-grid">
+      <section class="card reveal algo-panel">
+        <div class="card-head">
+          <div>
+            <h1>Caesar Cipher</h1>
+            <p class="lead">
+              Cipher substitusi klasik di mana setiap huruf digeser beberapa langkah pada alfabet.
+              Mudah dipahami, sempurna untuk belajar dasar kriptografi.
+            </p>
+          </div>
+          <div class="algo-tags">
+            <span class="chip-soft">Substitution cipher</span>
+            <span class="chip-soft">Symmetric key</span>
+            <span class="chip-soft">Level: Dasar</span>
+          </div>
+        </div>
+        <div class="card-body algo-body">
+          <div class="algo-section">
+            <h3>Ide Inti</h3>
+            <p>
+              Huruf A–Z diasosiasikan ke angka 0–25. Kunci adalah nilai
+              <code>shift</code> yang menentukan seberapa jauh huruf digeser.
+            </p>
+            <p class="mono-example">
+              Contoh shift = 3: A→D, B→E, C→F, ..., X→A, Y→B, Z→C
+            </p>
+          </div>
+          <div class="algo-section">
+            <h3>Rumus</h3>
+            <p>
+              Dalam bentuk matematis:
+            </p>
+            <div class="formula-box">
+              <span>E(x) = (x + k) mod 26</span>
+              <span>D(x) = (x - k) mod 26</span>
+            </div>
+            <ul class="edu-list">
+              <li><strong>x</strong>: indeks huruf asli</li>
+              <li><strong>k</strong>: nilai shift (kunci)</li>
+              <li><strong>E(x)</strong>: indeks huruf terenkripsi</li>
+            </ul>
+          </div>
+          <div class="algo-section">
+            <h3>Kelemahan</h3>
+            <ul class="edu-list">
+              <li>Ruang kunci hanya 26 kemungkinan, mudah di-bruteforce.</li>
+              <li>Distribusi huruf bisa dianalisis dengan analisis frekuensi.</li>
+              <li>Hanya cocok untuk edukasi, bukan keamanan nyata.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="card reveal roles-panel">
+        <div class="card-head">
+          <h2>Pilih Peran</h2>
+          <p class="muted">
+            Tentukan apakah kamu bertindak sebagai <strong>pengirim</strong> (enkripsi)
+            atau <strong>penerima</strong> (dekripsi).
+          </p>
+        </div>
+        <div class="card-body">
+          <div class="role-cards">
+            <a class="role-card" href="caesar_encrypt.html">
+              <strong>Saya Pengirim</strong>
+              <small>Masuk ke halaman enkripsi. Kamu menulis pesan, memilih shift, lalu sistem menampilkan ciphertext dan langkah per huruf.</small>
+            </a>
+            <a class="role-card" href="caesar_decrypt.html">
+              <strong>Saya Penerima</strong>
+              <small>Masuk ke halaman dekripsi. Tempel ciphertext yang kamu terima, masukkan shift, dan lihat bagaimana pesan asli dipulihkan.</small>
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">© <span id="year"></span> KriptoKu</footer>
+  <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+  <script defer src="js/theme.js"></script>
+  <script defer src="js/helpers.js"></script>
+</body>
+</html>

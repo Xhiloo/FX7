@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="system">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KriptoKu • Caesar Decrypt</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script defer src="js/utils.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="logo">₭</span>
+        <a href="caesar.html" class="brand-name">KriptoKu</a>
+      </div>
+      <div class="header-actions">
+        <a class="tab" href="index.html">Menu</a>
+        <a class="tab" href="rsa_keys.html">Generate Key</a>
+        <a class="tab" href="rsa.html">RSA</a>
+        <a class="tab active" href="caesar.html">Caesar</a>
+      </div>
+      <div class="theme-toggle">
+        <button id="theme-light" class="chip">☀️</button>
+        <button id="theme-system" class="chip">⚙️</button>
+        <button id="theme-dark" class="chip">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container page-grid">
+      <!-- Panel edukasi -->
+      <section class="card reveal algo-panel">
+        <div class="card-head">
+          <div>
+            <h1>Caesar Cipher • Dekripsi</h1>
+            <p class="lead">
+              Di sini kamu berperan sebagai <strong>penerima</strong>. Tugasmu adalah
+              mengubah ciphertext kembali menjadi plainteks menggunakan shift yang sama.
+            </p>
+          </div>
+          <div class="algo-tags">
+            <span class="chip-soft">Peran: Penerima</span>
+            <span class="chip-soft">Operasi: Decrypt</span>
+          </div>
+        </div>
+        <div class="card-body algo-body">
+          <div class="algo-section">
+            <h3>Informasi yang kamu butuh</h3>
+            <ul class="edu-list">
+              <li>Ciphertext dari pengirim.</li>
+              <li>Nilai shift yang disepakati sebelumnya.</li>
+            </ul>
+          </div>
+          <div class="algo-section">
+            <h3>Proses dekripsi</h3>
+            <p>
+              Untuk tiap huruf terenkripsi dengan indeks <code>y</code>, kita hitung kembali:
+            </p>
+            <div class="formula-box">
+              <span>D(y) = (y - k) mod 26</span>
+            </div>
+            <p class="field-hint">
+              Bila hasil negatif, mod 26 memastikan kita kembali ke rentang 0–25.
+            </p>
+          </div>
+          <div class="algo-section">
+            <h3>Eksperimen</h3>
+            <ul class="edu-list">
+              <li>Coba ciphertext yang sama dengan halaman enkripsi untuk tunjukkan hubungan keduanya.</li>
+              <li>Ganti shift dan perhatikan bagaimana hasil berubah total.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workspace dekripsi -->
+      <section class="card reveal workspace">
+        <div class="card-head workspace-head">
+          <div>
+            <h2>Dekripsi Teks</h2>
+            <p class="muted">
+              Tempel ciphertext yang kamu terima, masukkan shift, lalu lihat hasil plainteks dan langkah-langkahnya.
+            </p>
+          </div>
+          <div class="workspace-meta">
+            <div class="meta-item">
+              <span class="meta-label">Mode</span>
+              <span class="meta-value">Decrypt (Penerima)</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Algoritma</span>
+              <span class="meta-value">Caesar Cipher</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body workspace-body">
+          <div class="field-row">
+            <div class="field-group">
+              <label for="shift">Shift (kunci)</label>
+              <input id="shift" class="input" type="number" value="3" min="0" max="25" />
+              <p class="field-hint">
+                Gunakan nilai shift yang sama seperti yang dipakai pengirim.
+              </p>
+            </div>
+            <div class="field-group">
+              <label>Ringkasan</label>
+              <div class="summary-box">
+                <div>Shift aktif: <span id="shift-label">3</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="cipher">Cipherteks</label>
+            <textarea id="cipher" class="input" rows="5" placeholder="Contoh: KHOOR ZRUOG"></textarea>
+          </div>
+
+          <div class="actions">
+            <button id="decrypt" class="btn primary">Dekripsi</button>
+            <button id="clearCipher" type="button" class="btn subtle small">Bersihkan teks</button>
+          </div>
+
+          <div class="field-group">
+            <label for="out">Plainteks</label>
+            <textarea id="out" class="input" rows="4" readonly
+              placeholder="Hasil dekripsi akan muncul di sini..."></textarea>
+            <div class="field-footer">
+              <button id="copy" type="button" class="btn ghost small">Salin plainteks</button>
+              <span class="muted small">
+                Pastikan tidak menyebarkan plainteks bila datanya sensitif. Ini hanya demo, bukan aplikasi produksi.
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Langkah detail -->
+    <section class="container card reveal steps-card">
+      <div class="card-head">
+        <div>
+          <h3>Langkah Dekripsi</h3>
+          <p class="muted">
+            Setiap huruf ciphertext akan ditelusuri kembali ke posisi aslinya.
+          </p>
+        </div>
+        <div class="progressbar">
+          <span id="prog"></span>
+        </div>
+      </div>
+      <div class="card-body steps-wrap">
+    <ol class="proc-steps">
+      <li>
+        <strong>Penerimaan ciphertext.</strong>
+        Pengguna menempelkan ciphertext yang diterima dari pengirim ke dalam kolom input.
+      </li>
+      <li>
+        <strong>Penentuan shift.</strong>
+        Nilai shift (kunci) yang digunakan pada saat enkripsi dimasukkan agar proses dekripsi bersesuaian.
+      </li>
+      <li>
+        <strong>Konversi ke indeks.</strong>
+        Setiap huruf ciphertext dikonversi ke indeks 0–25. Karakter non-alfabet tidak diubah.
+      </li>
+      <li>
+        <strong>Pemulihan huruf asli.</strong>
+        Sistem menerapkan rumus <code>D(y) = (y - k) mod 26</code> untuk mengembalikan setiap huruf ke posisi semula.
+      </li>
+      <li>
+        <strong>Rekonstruksi plainteks.</strong>
+        Hasil dekripsi untuk semua huruf digabungkan sehingga membentuk plainteks yang dapat dibaca.
+      </li>
+      <li>
+        <strong>Monitoring proses.</strong>
+        Bagian di bawah menampilkan ringkasan langkah untuk tiap huruf sehingga proses dekripsi dapat dianalisis.
+      </li>
+    </ol>
+    <p class="proc-note">
+      Catatan: demo ini bertujuan edukasi, sehingga setiap langkah ditampilkan secara eksplisit dan mudah diikuti.
+    </p>
+    <div id="steps" class="steps"></div>
+  </div>
+
+
+  <footer class="site-footer">© <span id="year"></span> KriptoKu</footer>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.addEventListener('DOMContentLoaded', () => {
+      const shift = document.getElementById('shift');
+      const shiftLabel = document.getElementById('shift-label');
+      const clearBtn = document.getElementById('clearCipher');
+      const cipher = document.getElementById('cipher');
+
+      if (shift && shiftLabel) {
+        const updateShift = () => shiftLabel.textContent = shift.value || '0';
+        shift.addEventListener('input', updateShift);
+        updateShift();
+      }
+
+      if (clearBtn && cipher) {
+        clearBtn.addEventListener('click', () => cipher.value = '');
+      }
+    });
+  </script>
+  <script defer src="js/theme.js"></script>
+  <script defer src="js/helpers.js"></script>
+  <script defer src="js/caesar_decrypt.js"></script>
+</body>
+</html>

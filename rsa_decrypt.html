@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="system">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KriptoKu • RSA Decrypt</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script defer src="js/utils.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="logo">₭</span>
+        <a href="rsa.html" class="brand-name">KriptoKu</a>
+      </div>
+      <div class="header-actions">
+        <a class="tab" href="index.html">Menu</a>
+        <a class="tab" href="rsa_keys.html">Generate Key</a>
+        <a class="tab active" href="rsa.html">RSA</a>
+        <a class="tab" href="caesar.html">Caesar</a>
+      </div>
+      <div class="theme-toggle">
+        <button id="theme-light" class="chip">☀️</button>
+        <button id="theme-system" class="chip">⚙️</button>
+        <button id="theme-dark" class="chip">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container page-grid">
+      <!-- Edukasi -->
+      <section class="card reveal algo-panel">
+        <div class="card-head">
+          <div>
+            <h1>RSA • Dekripsi</h1>
+            <p class="lead">
+              Sebagai <strong>penerima</strong>, kamu memegang <strong>private key</strong> dan
+              bertugas mengembalikan ciphertext menjadi plainteks.
+            </p>
+          </div>
+          <div class="algo-tags">
+            <span class="chip-soft">Peran: Penerima</span>
+            <span class="chip-soft">Kunci: Private (n, d)</span>
+          </div>
+        </div>
+        <div class="card-body algo-body">
+          <div class="algo-section">
+            <h3>Alur dekripsi</h3>
+            <ul class="edu-list">
+              <li>1. Penerima memegang private key dalam file .json.</li>
+              <li>2. Ciphertext (angka-angka) dikirim oleh pengirim.</li>
+              <li>3. Setiap angka diproses dengan rumus <code>m = c^d mod n</code>.</li>
+            </ul>
+          </div>
+          <div class="algo-section">
+            <h3>Kenapa private key penting?</h3>
+            <ul class="edu-list">
+              <li>Kalau private key bocor, semua ciphertext lampau bisa dibuka.</li>
+              <li>Public key boleh disebar, tetapi private key sebaiknya hanya ada di perangkat penerima.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workspace -->
+      <section class="card reveal workspace">
+        <div class="card-head workspace-head">
+          <div>
+            <h2>Dekripsi dengan Private Key</h2>
+            <p class="muted">
+              Impor private key milikmu, tempel ciphertext yang diterima, lalu jalankan proses dekripsi.
+            </p>
+          </div>
+          <div class="workspace-meta">
+            <div class="meta-item">
+              <span class="meta-label">Mode</span>
+              <span class="meta-value">Decrypt</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Kunci</span>
+              <span class="meta-value">Private key</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body workspace-body">
+          <div class="field-group">
+            <label for="privFile">Impor Private Key (.json)</label>
+            <input id="privFile" class="input" type="file" accept=".json" />
+            <div id="privInfo" class="small muted">Belum ada kunci terimpor.</div>
+          </div>
+
+          <div class="field-group">
+            <label for="cipher">Ciphertext (angka dipisah spasi)</label>
+            <textarea id="cipher" class="input" rows="3"
+              placeholder="Contoh: 7 4 11 11 14"></textarea>
+          </div>
+
+          <div class="actions">
+            <button id="decrypt" class="btn primary">Dekripsi</button>
+          </div>
+
+          <div class="field-group">
+            <label for="plain">Plainteks</label>
+            <textarea id="plain" class="input" rows="3" readonly
+              placeholder="Hasil dekripsi muncul di sini..."></textarea>
+            <div class="field-footer">
+              <button id="copyPlain" class="btn ghost small">Salin plainteks</button>
+              <span class="muted small">
+                Dalam skenario nyata, plainteks biasanya tidak disimpan sembarangan di perangkat.
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="container card reveal steps-card">
+      <div class="card-head">
+        <div>
+          <h3>Langkah Dekripsi</h3>
+          <p class="muted">
+            Sistem akan menampilkan bagaimana setiap blok ciphertext diproses menggunakan private key.
+          </p>
+        </div>
+        <div class="progressbar"><span id="prog"></span></div>
+      </div>
+        <div class="card-body steps-wrap">
+    <ol class="proc-steps">
+      <li>
+        <strong>Impor private key.</strong>
+        Pengguna memuat file private key (.json) yang berisi nilai <code>n</code> dan <code>d</code> yang bersifat rahasia.
+      </li>
+      <li>
+        <strong>Pembacaan ciphertext.</strong>
+        Ciphertext berupa deretan angka dipisah berdasarkan spasi, lalu masing-masing diperlakukan sebagai satu blok terenkripsi.
+      </li>
+      <li>
+        <strong>Penerapan rumus dekripsi.</strong>
+        Untuk setiap blok <code>c</code>, sistem menghitung
+        <code>m = c^d mod n</code> untuk mengembalikan nilai numerik semula.
+      </li>
+      <li>
+        <strong>Konversi ke karakter.</strong>
+        Nilai numerik hasil dekripsi dipetakan kembali ke karakter sehingga membentuk plainteks yang dapat dibaca.
+      </li>
+      <li>
+        <strong>Penyusunan pesan asli.</strong>
+        Seluruh karakter digabungkan menjadi suatu kalimat utuh seperti sebelum proses enkripsi dilakukan.
+      </li>
+      <li>
+        <strong>Analisis proses.</strong>
+        Detail per blok, termasuk nilai <code>c</code>, <code>m</code>, dan parameter kunci, ditampilkan di bagian bawah
+        untuk mendukung penjelasan maupun dokumentasi.
+      </li>
+    </ol>
+    <p class="proc-note">
+      Catatan: mekanisme ini menunjukkan bahwa hanya pemegang private key yang dapat mengembalikan ciphertext ke bentuk aslinya.
+    </p>
+    <div id="steps" class="steps"></div>
+  </div>
+
+
+  <footer class="site-footer">© <span id="year"></span> KriptoKu</footer>
+  <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+  <script defer src="js/theme.js"></script>
+  <script defer src="js/helpers.js"></script>
+  <script defer src="js/rsa_decrypt.js"></script>
+</body>
+</html>

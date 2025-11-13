@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="system">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KriptoKu • Caesar Encrypt</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script defer src="js/utils.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="logo">₭</span>
+        <a href="caesar.html" class="brand-name">KriptoKu</a>
+      </div>
+      <div class="header-actions">
+        <a class="tab" href="index.html">Menu</a>
+        <a class="tab" href="rsa_keys.html">Generate Key</a>
+        <a class="tab" href="rsa.html">RSA</a>
+        <a class="tab active" href="caesar.html">Caesar</a>
+      </div>
+      <div class="theme-toggle">
+        <button id="theme-light" class="chip">☀️</button>
+        <button id="theme-system" class="chip">⚙️</button>
+        <button id="theme-dark" class="chip">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container page-grid">
+      <!-- Panel edukasi -->
+      <section class="card reveal algo-panel">
+        <div class="card-head">
+          <div>
+            <h1>Caesar Cipher • Enkripsi</h1>
+            <p class="lead">
+              Pada tahap ini kamu bertindak sebagai <strong>pengirim</strong>. Tugasmu adalah
+              mengubah plainteks menjadi ciphertext menggunakan shift yang disepakati.
+            </p>
+          </div>
+          <div class="algo-tags">
+            <span class="chip-soft">Peran: Pengirim</span>
+            <span class="chip-soft">Operasi: Encrypt</span>
+          </div>
+        </div>
+        <div class="card-body algo-body">
+          <div class="algo-section">
+            <h3>Alur komunikasi</h3>
+            <ul class="edu-list">
+              <li>1. Tentukan nilai shift bersama penerima (kunci bersama).</li>
+              <li>2. Enkripsi pesan asli dengan shift tersebut.</li>
+              <li>3. Kirim <em>hanya</em> ciphertext ke penerima (kuncinya jangan ditulis di pesan).</li>
+              <li>4. Penerima mendekripsi dengan shift yang sama.</li>
+            </ul>
+          </div>
+          <div class="algo-section">
+            <h3>Tips presentasi</h3>
+            <ul class="edu-list">
+              <li>Tunjukkan bagaimana huruf non-alfabet (spasi, koma, angka) dibiarkan apa adanya.</li>
+              <li>Demokan pesan pendek dulu, lalu coba pesan panjang untuk menunjukkan konsistensinya.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workspace enkripsi -->
+      <section class="card reveal workspace">
+        <div class="card-head workspace-head">
+          <div>
+            <h2>Enkripsi Teks</h2>
+            <p class="muted">
+              Masukkan plainteks dan nilai shift, lalu lihat ciphertext serta langkah transformasi
+              di bagian bawah.
+            </p>
+          </div>
+          <div class="workspace-meta">
+            <div class="meta-item">
+              <span class="meta-label">Mode</span>
+              <span class="meta-value">Encrypt (Pengirim)</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Algoritma</span>
+              <span class="meta-value">Caesar Cipher</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body workspace-body">
+          <div class="field-group">
+            <label for="plain">Plainteks</label>
+            <textarea id="plain" rows="5" class="input"
+              placeholder="Tulis pesan yang ingin dienkripsi, contoh: HALO INI DARI KELOMPOK KAMI"></textarea>
+            <p class="field-hint">
+              Huruf A–Z akan digeser, karakter lain (spasi, tanda baca, angka) dipertahankan.
+            </p>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="shift">Shift (kunci)</label>
+              <input id="shift" class="input" type="number" value="3" min="0" max="25" />
+              <p class="field-hint">
+                Nilai antara 0–25. Misalnya 3 berarti A→D, B→E, dst.
+              </p>
+            </div>
+            <div class="field-group">
+              <label>Ringkasan</label>
+              <div class="summary-box">
+                <div><span id="len-plain">0</span> karakter dalam plainteks</div>
+                <div>Shift aktif: <span id="shift-label">3</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="encrypt" class="btn primary">Enkripsi</button>
+            <button id="clearPlain" type="button" class="btn subtle small">Bersihkan teks</button>
+          </div>
+
+          <div class="field-group">
+            <label for="out">Cipherteks</label>
+            <textarea id="out" class="input" rows="4" readonly
+              placeholder="Hasil enkripsi akan muncul di sini..."></textarea>
+            <div class="field-footer">
+              <button id="copy" type="button" class="btn ghost small">Salin ciphertext</button>
+              <span class="muted small">
+                Bagikan ciphertext ke penerima melalui kanal apa pun, selama shift-nya sudah disepakati sebelumnya.
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Langkah detail -->
+    <section class="container card reveal steps-card">
+      <div class="card-head">
+        <div>
+          <h3>Langkah Enkripsi</h3>
+          <p class="muted">
+            Setiap huruf diproses satu per satu, lalu divisualisasikan di sini.
+          </p>
+        </div>
+        <div class="progressbar">
+          <span id="prog"></span>
+        </div>
+      </div>
+        <div class="card-body steps-wrap">
+    <ol class="proc-steps">
+      <li>
+        <strong>Persiapan input.</strong>
+        Pengguna memasukkan plainteks dan menentukan nilai shift (kunci) yang akan digunakan bersama penerima.
+      </li>
+      <li>
+        <strong>Normalisasi karakter.</strong>
+        Sistem membaca setiap karakter. Huruf alfabet dipetakan ke indeks 0–25, sedangkan spasi dan tanda baca dipertahankan.
+      </li>
+      <li>
+        <strong>Pergeseran alfabet.</strong>
+        Untuk setiap huruf, sistem menerapkan rumus <code>E(x) = (x + k) mod 26</code> untuk memperoleh huruf hasil enkripsi.
+      </li>
+      <li>
+        <strong>Penyusunan ciphertext.</strong>
+        Seluruh huruf hasil pergeseran disatukan kembali menjadi sebuah ciphertext yang siap dikirim ke penerima.
+      </li>
+      <li>
+        <strong>Visualisasi proses.</strong>
+        Tabel di bawah menampilkan detail per huruf: huruf awal, indeks, hasil penambahan shift, dan huruf terenkripsi.
+      </li>
+    </ol>
+    <p class="proc-note">
+      Catatan: langkah teknis di bawah dihasilkan otomatis berdasarkan input yang kamu masukkan.
+    </p>
+    <div id="steps" class="steps"></div>
+  </div>
+
+
+  <footer class="site-footer">© <span id="year"></span> KriptoKu</footer>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const plain = document.getElementById('plain');
+      const lenPlain = document.getElementById('len-plain');
+      const shift = document.getElementById('shift');
+      const shiftLabel = document.getElementById('shift-label');
+      const clearBtn = document.getElementById('clearPlain');
+
+      if (plain && lenPlain) {
+        const updateLen = () => lenPlain.textContent = plain.value.length;
+        plain.addEventListener('input', updateLen);
+        updateLen();
+      }
+
+      if (shift && shiftLabel) {
+        const updateShift = () => shiftLabel.textContent = shift.value || '0';
+        shift.addEventListener('input', updateShift);
+        updateShift();
+      }
+
+      if (clearBtn && plain && lenPlain) {
+        clearBtn.addEventListener('click', () => {
+          plain.value = '';
+          lenPlain.textContent = '0';
+        });
+      }
+    });
+  </script>
+  <script defer src="js/theme.js"></script>
+  <script defer src="js/helpers.js"></script>
+  <script defer src="js/caesar_encrypt.js"></script>
+</body>
+</html>

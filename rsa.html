@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="system">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KriptoKu • RSA Algorithm</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/utils.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="logo">₭</span>
+        <a href="index.html" class="brand-name">KriptoKu</a>
+      </div>
+      <div class="header-actions">
+        <a class="tab" href="index.html">Menu</a>
+        <a class="tab" href="rsa_keys.html">Generate Key</a>
+        <a class="tab active" href="rsa.html">RSA</a>
+        <a class="tab" href="caesar.html">Caesar</a>
+      </div>
+      <div class="theme-toggle">
+        <button id="theme-light" class="chip">☀️</button>
+        <button id="theme-system" class="chip">⚙️</button>
+        <button id="theme-dark" class="chip">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container page-grid">
+      <section class="card reveal algo-panel">
+        <div class="card-head">
+          <div>
+            <h1>RSA</h1>
+            <p class="lead">
+              Algoritma kriptografi kunci publik yang berbasis faktorisasi bilangan besar.
+              Di sini kamu bisa mempraktikkan cara enkripsi dan dekripsi menggunakan public key dan private key.
+            </p>
+          </div>
+          <div class="algo-tags">
+            <span class="chip-soft">Asymmetric</span>
+            <span class="chip-soft">Public / Private Key</span>
+            <span class="chip-soft">Level: Menengah</span>
+          </div>
+        </div>
+        <div class="card-body algo-body">
+          <div class="algo-section">
+            <h3>Konsep singkat</h3>
+            <ul class="edu-list">
+              <li>Pilih dua bilangan prima besar <strong>p</strong> dan <strong>q</strong>.</li>
+              <li>Hitung <strong>n = p × q</strong> dan <strong>φ(n) = (p-1)(q-1)</strong>.</li>
+              <li>Pilih <strong>e</strong> yang relatif prima dengan φ(n).</li>
+              <li>Hitung <strong>d</strong> sebagai invers modular dari e terhadap φ(n).</li>
+            </ul>
+          </div>
+          <div class="algo-section">
+            <h3>Rumus enkripsi / dekripsi</h3>
+            <div class="formula-box">
+              <span>c = m^e mod n</span>
+              <span>m = c^d mod n</span>
+            </div>
+            <p class="field-hint">
+              Di demo ini, tiap karakter diubah menjadi angka lalu diproses satu per satu dengan rumus di atas.
+            </p>
+          </div>
+          <div class="algo-section">
+            <h3>Peran public & private key</h3>
+            <ul class="edu-list">
+              <li><strong>Public key (n, e)</strong>: boleh dibagikan ke siapa pun.</li>
+              <li><strong>Private key (n, d)</strong>: harus dijaga, digunakan untuk dekripsi.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="card reveal roles-panel">
+        <div class="card-head">
+          <h2>Pilih Peran</h2>
+          <p class="muted">
+            Gunakan RSA sebagai pengirim (enkripsi dengan public key) atau penerima (dekripsi dengan private key).
+          </p>
+        </div>
+        <div class="card-body">
+          <div class="role-cards">
+            <a class="role-card" href="rsa_encrypt.html">
+              <strong>Saya Pengirim</strong>
+              <small>Impor public key penerima, ketik plainteks, dan hasilkan ciphertext berupa deretan angka.</small>
+            </a>
+            <a class="role-card" href="rsa_decrypt.html">
+              <strong>Saya Penerima</strong>
+              <small>Impor private key milikmu, tempel ciphertext, lalu lihat bagaimana plainteks dipulihkan langkah demi langkah.</small>
+            </a>
+          </div>
+          <p class="muted small" style="margin-top:10px">
+            Catatan: kunci dapat digenerate dari halaman <strong>Generate Key</strong> dan diekspor dalam format JSON.
+          </p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">© <span id="year"></span> KriptoKu</footer>
+  <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+  <script defer src="js/theme.js"></script>
+  <script defer src="js/helpers.js"></script>
+</body>
+</html>
